@@ -12,7 +12,8 @@ class Series(models.Model):
     running = models.BooleanField(default=True)
     image = models.FileField(
         upload_to=BASE_DIR/"static/images/series", max_length=500)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    game = models.ForeignKey(
+        Game, on_delete=models.CASCADE, related_name="serieses")
 
     def __str__(self):
         return self.name

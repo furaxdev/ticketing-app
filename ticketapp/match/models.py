@@ -21,6 +21,7 @@ class Match(models.Model):
     platinumTicketPrice = models.IntegerField(default=500)
     vipTicketPrice = models.IntegerField(default=1000)
     ticket_reserve_open = models.BooleanField(default=True)
+    
 
     def __str__(self):
         return self.name
