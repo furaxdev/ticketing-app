@@ -1,0 +1,4 @@
+/venv
+/ticketapp/static
+/ticketapp/**/__pycache__
+/ticketapp/**/migrations
