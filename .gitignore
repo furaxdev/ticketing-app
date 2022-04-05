@@ -1,5 +1,5 @@
 /venv
-/ticketapp/static
+/ticketapp/static/images
 /ticketapp/**/__pycache__
 /ticketapp/**/migrations
 /ticketapp/db.sqlite3
