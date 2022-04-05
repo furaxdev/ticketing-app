@@ -6,13 +6,14 @@ from pathlib import Path
 # Register your models here.
 from django.utils.html import mark_safe
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+
+BASE_DIR = Path(__file__).parent.parent.resolve('resources')
 
 
 class Game(models.Model):
     name = models.CharField(max_length=30)
     image = models.FileField(upload_to=BASE_DIR /
-                             "static/images/games", max_length=500)
+                             "static/images/games", max_length=500, )
 
     def __str__(self):
         return self.name

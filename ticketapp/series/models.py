@@ -4,7 +4,8 @@ from pathlib import Path
 
 from game.models import Game
 # Create your models here.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).parent.parent.resolve('resources')
+
 
 
 class Series(models.Model):

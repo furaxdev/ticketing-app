@@ -5,7 +5,7 @@ from . import models
 
 
 class SeatAdmin(admin.ModelAdmin):
-    list_display = ('name',  'row')
+    list_display = ('id', 'name',  'row', 'type')
 
 
 admin.site.register(models.Seat, SeatAdmin)

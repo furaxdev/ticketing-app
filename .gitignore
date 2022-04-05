@@ -2,3 +2,4 @@
 /ticketapp/static
 /ticketapp/**/__pycache__
 /ticketapp/**/migrations
+/ticketapp/db.sqlite3

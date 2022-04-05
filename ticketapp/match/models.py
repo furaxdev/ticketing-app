@@ -4,7 +4,8 @@ from django.utils.html import mark_safe
 
 from game.models import Game
 from series.models import Series
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).parent.parent.resolve('resources')
+
 
 
 class Match(models.Model):
