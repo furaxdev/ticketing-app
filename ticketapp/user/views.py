@@ -1,11 +1,18 @@
 
-from django.shortcuts import redirect, render
+# Create your views here.
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import UserCreationForm
-# Create your views here.
-from django.contrib import messages
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.utils.encoding import force_str, force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.contrib.sites.shortcuts import get_current_site
 from .models import NewUser
+from .tokens import account_activation_token
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
 
 
 def check_user(user):
@@ -74,12 +81,17 @@ def loginView(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-
+        _user = NewUser.objects.filter(
+            email=request.POST.get('username')).first()
+        print(_user.is_active)
         if user is not None:
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, 'Email or Password is incorrect')
+            if(_user is not None and _user.is_active is not True):
+                messages.error(request, 'Please Verify your email first')
+            else:
+                messages.error(request, 'Email or Password is incorrect')
 
     return render(request, 'login.html', {})
 
@@ -94,8 +106,23 @@ def registerPage(request):
     if request.method == "POST":
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(request)
+            mail_subject = 'Activate your account.'
+            message = render_to_string('email_template.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            to_email = form.cleaned_data.get('email')
+            send_mail(mail_subject, message, None, [to_email])
+            messages.error(
+                request, 'Verification link is sent to your mail. Please verify before login')
             return redirect('login')
+
         else:
             context = {'form': form}
             return render(request, 'register.html', context)
@@ -103,3 +130,19 @@ def registerPage(request):
         form = CreateUserForm()
         context = {'form': form}
         return render(request, 'register.html', context)
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = NewUser.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, NewUser.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.error(
+            request, 'Thank you for your email confirmation. Now you can login your account.')
+        return redirect('login')
+    else:
+        return HttpResponse('Activation link is invalid!')

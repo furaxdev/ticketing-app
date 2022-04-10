@@ -19,7 +19,8 @@ class Command(BaseCommand):
 
             for j in seats:
 
-                seat = Seat(name="seat"+str(j)+"row"+str(i)+block)
+                seat = Seat(name="Seat "+str(j)+" Row " +
+                            str(i) + " " + block.capitalize())
                 seat.row = row
 
                 seat.type = "normal"

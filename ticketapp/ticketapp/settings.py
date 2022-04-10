@@ -31,19 +31,23 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'game.apps.GameConfig',
     'series.apps.SeriesConfig',
     'match.apps.MatchConfig',
     'row.apps.RowConfig',
     'seat.apps.SeatConfig',
     'seatReservation.apps.SeatreservationConfig',
+    'ticket.apps.TicketConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user'
+    'user',
+    'channels',
+    'bootstrap_email',
 
 ]
 
@@ -133,3 +137,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = [BASE_DIR/"static"]
 AUTH_USER_MODEL = 'user.NewUser'
+JAZZMIN_SETTINGS = {
+    "site_title": "Ticket APP Admin",
+    "site_header": "Ticket App",
+    "site_brand": "Ticketapp",
+
+}
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'sushilbasnet0123@gmail.com'
+# EMAIL_HOST_PASSWORD = 'Refusedtosink!!!!!???'
+EMAIL_HOST_PASSWORD = 'ubbjibtleykvakxt'
+ASGI_APPLICATION = "ticketapp.asgi.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
